@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0a0a0a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Motion Studio</title>
+<title>Motion Studio IA</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 button,input,textarea,select{font:inherit;color:inherit;background:none;border:none;outline:none;-webkit-appearance:none;appearance:none;border-radius:0}
@@ -66,10 +66,11 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
 .img-item select{width:100%;font-size:15px;color:var(--text);background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;min-height:44px}
 
 .actions{padding:20px;display:flex;flex-direction:column;gap:10px;margin-top:auto}
-.btn-primary,.btn-secondary{min-height:52px;border-radius:12px;font-size:15px;font-weight:600;letter-spacing:.04em;display:flex;align-items:center;justify-content:center;transition:transform .12s,opacity .2s;-webkit-tap-highlight-color:transparent}
+.btn-primary,.btn-secondary,.btn-brain{min-height:52px;border-radius:12px;font-size:15px;font-weight:600;letter-spacing:.04em;display:flex;align-items:center;justify-content:center;transition:transform .12s,opacity .2s;-webkit-tap-highlight-color:transparent}
 .btn-primary{background:var(--gold);color:#0a0a0a}
 .btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border)}
-.btn-primary:active,.btn-secondary:active{transform:scale(.98)}
+.btn-brain{background:linear-gradient(135deg,rgba(201,169,97,.2),rgba(201,169,97,.06));border:1px solid rgba(201,169,97,.45);color:var(--gold);gap:8px}
+.btn-primary:active,.btn-secondary:active,.btn-brain:active{transform:scale(.98)}
 .btn-primary:disabled,.btn-secondary:disabled{opacity:.4}
 
 #stage{position:fixed;inset:0;width:100vw;height:100dvh;background:#000;overflow:hidden;display:none;z-index:1000}
@@ -81,10 +82,10 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
 #bgGradient{position:absolute;inset:0;background:radial-gradient(circle at 30% 20%, #1e1e1e, #0a0a0a 70%);animation:bgDrift 18s ease-in-out infinite alternate}
 @keyframes bgDrift{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.08) translate(-2%,-1%)}}
 
-#vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,.18) 100%)}
+#vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,.-sp18) 100%)}
 
-#phraseLayer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:8vmin;pointer-events:none}
-#phraseText{font-size:clamp(28px,7.5vmin,64px);line-height:1.15;font-weight:600;letter-spacing:-.02em;text-align:center;max-width:92%;will-change:transform,opacity}
+#phraseLayer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:8vminacing;pointer-events:none}
+#phraseText{font-size:clamp(28px,7.5vmin,64px);line-height:1.15;font-weight:600;letter:-.02em;text-align:center;max-width:92%;will-change:transform,opacity}
 
 .anim-fade{opacity:0}
 .anim-fade.in{opacity:1;transition:opacity .9s ease}
@@ -106,10 +107,6 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
 
 #toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 90px);transform:translateX(-50%) translateY(20px);background:#222;color:#fff;font-size:13px;padding:10px 16px;border-radius:20px;opacity:0;transition:opacity .25s,transform .25s;z-index:2000;pointer-events:none;max-width:90vw;text-align:center}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-
-.btn-brain{min-height:52px;border-radius:12px;font-size:15px;font-weight:600;letter-spacing:.04em;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,rgba(201,169,97,.2),rgba(201,169,97,.06));border:1px solid rgba(201,169,97,.45);color:var(--gold);-webkit-tap-highlight-color:transparent;transition:transform .12s,background .2s}
-.btn-brain:active{transform:scale(.98);background:linear-gradient(135deg,rgba(201,169,97,.32),rgba(201,169,97,.14))}
-.brain-icon{font-size:18px;line-height:1}
 </style>
 </head>
 <body>
@@ -117,7 +114,7 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
 <div id="editor">
   <div class="header">
     <h1>Motion Studio</h1>
-    <p>Composez. Apercevez. Enregistrez.</p>
+    <p>L'IA analyse. Vous validez.</p>
   </div>
 
   <div class="section">
@@ -128,24 +125,24 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
   </div>
 
   <div class="section">
-    <h2>2. Texte</h2>
-    <label class="field-label" for="textInput">Une phrase par ligne (dans l'ordre d'apparition)</label>
-    <textarea id="textInput" placeholder="Premiere phrase.&#10;Deuxieme phrase.&#10;Troisieme phrase."></textarea>
+    <h2>2. Texte de la voix</h2>
+    <label class="field-label" for="textInput">Collez votre texte entier (même en désordre)</label>
+    <textarea id="textInput" placeholder="Collez votre texte ici. L'IA le decoupera et le synchronisera."></textarea>
   </div>
 
   <div class="section">
-    <h2>3. Images</h2>
+    <h2>3. Images (Optionnel)</h2>
     <label class="file-btn" for="imgInput">Ajouter des images</label>
     <input type="file" id="imgInput" accept="image/*" multiple>
     <div class="img-list" id="imgList"></div>
-    <div class="file-meta" id="imgMeta" style="text-align:left;margin-top:10px">Aucune image. Le fond anime sera utilise.</div>
+    <div class="file-meta" id="imgMeta" style="text-align:left;margin-top:10px">L'IA placera vos images automatiquement.</div>
   </div>
 
   <div class="section">
     <h2>4. Couleurs</h2>
     <div class="color-row">
       <div class="color-item">
-        <input type="color" id="textColor" value="#ffffff">
+        <input type="color" id="textColor" value="#f5f0e6">
         <span>Texte</span>
       </div>
       <div class="color-item">
@@ -155,18 +152,8 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
     </div>
   </div>
 
-  <div class="section">
-    <h2>5. Animation</h2>
-    <div class="anim-grid" id="animGrid">
-      <button class="anim-btn active" data-anim="fade">Fondu</button>
-      <button class="anim-btn" data-anim="slide">Glisse haut</button>
-      <button class="anim-btn" data-anim="type">Machine a ecrire</button>
-      <button class="anim-btn" data-anim="scale">Zoom doux</button>
-    </div>
-  </div>
-
   <div class="actions">
-    <button class="btn-brain" id="brainBtn"><span class="brain-icon">&#10022;</span>Generer automatiquement</button>
+    <button class="btn-brain" id="brainBtn"><span style="font-size:18px">&#10022;</span> Generer et Synchroniser (IA)</button>
     <button class="btn-primary" id="previewBtn">Apercu</button>
     <button class="btn-secondary" id="recordBtn">Mode Enregistrement</button>
   </div>
@@ -186,20 +173,24 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
   <button id="closeStage" aria-label="Fermer">&times;</button>
 </div>
 
-<audio id="audioEl" preload="metadata"></audio>
+<audio id="audioEl" preload="auto"></audio>
 <div id="toast"></div>
 
 <script>
 (function(){
   'use strict';
 
+  // ==========================================
+  // 1. ETAT DE L'APPLICATION
+  // ==========================================
   var state = {
     audioUrl: null,
     duration: 0,
+    rawText: '',
     phrases: [],
-    timings: [],
+    timings: [], // Calculé par l'IA
     images: [],
-    textColor: '#ffffff',
+    textColor: '#f5f0e6',
     bgColor: '#0a0a0a',
     animation: 'fade'
   };
@@ -219,13 +210,21 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
   var currentImgUrl = null;
   var activeBg = 'A';
   var typewriterInterval = null;
-  var phraseTimeout = null;
 
+  // ==========================================
+  // 2. OUTILS ET UTILITAIRES
+  // ==========================================
   function showToast(msg){
     toastEl.textContent = msg;
     toastEl.classList.add('on');
     clearTimeout(toastEl._t);
-    toastEl._t = setTimeout(function(){ toastEl.classList.remove('on'); }, 2500);
+    toastEl._t = setTimeout(function(){ toastEl.classList.remove('on'); }, 3000);
+  }
+
+  function formatTime(s){
+    if(!s || !isFinite(s)){ return '0:00'; }
+    var m = Math.floor(s/60), sec = Math.floor(s%60);
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
   }
 
   function shade(hex, pct){
@@ -235,99 +234,133 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
     var avg = (r+g+b)/3;
     var f = pct/100;
     if(avg > 128){
-      r = Math.max(0, Math.round(r*(1-f)));
-      g = Math.max(0, Math.round(g*(1-f)));
-      b = Math.max(0, Math.round(b*(1-f)));
+      r = Math.max(0, Math.round(r*(1-f))); g = Math.max(0, Math.round(g*(1-f))); b = Math.max(0, Math.round(b*(1-f)));
     } else {
-      r = Math.min(255, Math.round(r + (255-r)*f));
-      g = Math.min(255, Math.round(g + (255-g)*f));
-      b = Math.min(255, Math.round(b + (255-b)*f));
+      r = Math.min(255, Math.round(r + (255-r)*f)); g = Math.min(255, Math.round(g + (255-g)*f)); b = Math.min(255, Math.round(b + (255-b)*f));
     }
     return 'rgb(' + r + ',' + g + ',' + b + ')';
   }
 
-  function luminance(hex){
-    var c = hex.replace('#','');
-    if(c.length === 3){ c = c[0]+c[0]+c[1]+c[1]+c[2]+c[2]; }
-    var r = parseInt(c.substr(0,2),16)/255;
-    var g = parseInt(c.substr(2,2),16)/255;
-    var b = parseInt(c.substr(4,2),16)/255;
-    function adj(v){ return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); }
-    return 0.2126*adj(r) + 0.7152*adj(g) + 0.0722*adj(b);
+  // ==========================================
+  // 3. L'INTELLIGENCE ARTIFICIELLE (LE CERVEAU)
+  // ==========================================
+  
+  // Etape A : Nettoyer et découper le texte
+  function cleanAndSplitText(text){
+    if(!text) return [];
+    // Remplace les sauts de ligne multiples par un seul espace
+    var clean = text.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
+    // Sépare par ponctuation forte
+    var sentences = clean.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [clean];
+    return sentences.map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
   }
 
-  function formatTime(s){
-    if(!s || !isFinite(s)){ return '0:00'; }
-    var m = Math.floor(s/60), sec = Math.floor(s%60);
-    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  // Etape B : Calculer le "poids" de chaque phrase (la durée qu'elle prend à l'oral)
+  function calculatePhraseWeights(phrases){
+    var weights = [];
+    for(var i=0; i<phrases.length; i++){
+      var p = phrases[i];
+      var baseWeight = p.length;
+      // L'IA ajoute du temps pour les pauses humaines
+      var commas = (p.match(/,/g) || []).length;
+      var dots = (p.match(/\./g) || []).length;
+      var exclaims = (p.match(/!/g) || []).length;
+      var questions = (p.match(/\?/g) || []).length;
+      // Formule de calcul (Simulation des respirations)
+      var weight = baseWeight + (commas * 4) + (dots * 8) + (exclaims * 5) + (questions * 6);
+      // Une phrase a toujours un temps minimum
+      if(weight < 15) weight = 15; 
+      weights.push(weight);
+    }
+    return weights;
   }
+
+  // Etape C : Générer les temps de début et de fin (Synchronisation)
+  function syncTimings(phrases, weights, totalDuration){
+    var timings = [];
+    var totalWeight = weights.reduce(function(a,b){ return a+b; }, 0);
+    var currentTime = 0;
+    
+    for(var i=0; i<phrases.length; i++){
+      var ratio = weights[i] / totalWeight;
+      var duration = ratio * totalDuration;
+      timings.push({
+        start: currentTime,
+        end: currentTime + duration
+      });
+      currentTime += duration;
+    }
+    return timings;
+  }
+
+  // Etape D : Choix de l'animation globale basée sur le texte
+  function aiChooseAnimation(phrases){
+    var totalChars = 0;
+    var hasExclaim = 0;
+    var hasQuestion = 0;
+    
+    for(var i=0; i<phrases.length; i++){
+      totalChars += phrases[i].length;
+      if(phrases[i].indexOf('!') > -1) hasExclaim++;
+      if(phrases[i].indexOf('?') > -1) hasQuestion++;
+    }
+    var avgLen = totalChars / phrases.length;
+    
+    // Règles de décision de l'IA
+    if(hasExclaim > 0) return 'scale'; // De l'énergie !
+    if(hasQuestion > 0) return 'slide'; // Du mouvement
+    if(avgLen > 80) return 'fade'; // Phrase longue, on laisse le temps de lire
+    return 'type'; // Par défaut, dynamique
+  }
+
+  // Etape E : Placement intelligent des images
+  function aiPlaceImages(images, phrasesCount){
+    if(images.length === 0 || phrasesCount === 0) return;
+    if(images.length === 1){
+      images[0].startPhrase = 0;
+      return;
+    }
+    for(var i=0; i<images.length; i++){
+      var ratio = i / (images.length - 1);
+      var idx = Math.round(ratio * (phrasesCount - 1));
+      images[i].startPhrase = idx;
+    }
+  }
+
+  // ==========================================
+  // 4. INTERFACE UTILISATEUR ET CHARGEMENT
+  // ==========================================
 
   document.getElementById('audioInput').addEventListener('change', function(e){
     var f = e.target.files && e.target.files[0];
     if(!f){ return; }
     
-    document.getElementById('audioMeta').textContent = f.name + ' (chargement...)';
+    document.getElementById('audioMeta').textContent = f.name + ' (Analyse...)';
     document.getElementById('audioBtn').classList.add('has-file');
-    showToast('Fichier audio selectionne...');
+    showToast('Chargement de l\'audio...');
 
     if(state.audioUrl){ URL.revokeObjectURL(state.audioUrl); }
     state.audioUrl = URL.createObjectURL(f);
     
     audioEl.src = state.audioUrl;
+    
+    // Forcer Safari à lire les métadonnées
     audioEl.load();
-
-    var attempts = 0;
-    var checkDuration = setInterval(function(){
-      attempts++;
+    
+    var attemptCount = 0;
+    var durationChecker = setInterval(function(){
+      attemptCount++;
       if(audioEl.duration && isFinite(audioEl.duration) && audioEl.duration > 0){
-        clearInterval(checkDuration);
+        clearInterval(durationChecker);
         state.duration = audioEl.duration;
-        document.getElementById('audioMeta').textContent = f.name + ' - ' + formatTime(state.duration);
-        computeTimings();
-        showToast('Audio pret : ' + formatTime(state.duration));
-      } else if(attempts > 20){ 
-        clearInterval(checkDuration);
-        document.getElementById('audioMeta').textContent = f.name + ' (Format non lu par Safari)';
-        showToast('Impossible de lire la duree. Verifiez l\'extension du fichier.');
+        document.getElementById('audioMeta').textContent = f.name + ' (' + formatTime(state.duration) + ')';
+        showToast('Audio pret !');
+      } else if(attemptCount > 15){
+        clearInterval(durationChecker);
+        document.getElementById('audioMeta').textContent = f.name + ' (Format non supporte)';
+        showToast('Attention : Safari ne lit pas cet audio. Essayez un MP3 ou M4A.');
       }
     }, 300);
-  });
-
-  var textInput = document.getElementById('textInput');
-  textInput.addEventListener('input', function(){
-    state.phrases = textInput.value.split('\n').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
-    computeTimings();
-    rebuildImageSelects();
-  });
-
-  function computeTimings(){
-    var phrases = state.phrases;
-    var dur = state.duration;
-    state.timings = [];
-    if(phrases.length === 0 || !isFinite(dur) || dur <= 0){ return; }
-    var totalChars = 0;
-    for(var i=0;i<phrases.length;i++){ totalChars += phrases[i].length + 6; }
-    var acc = 0;
-    for(var j=0;j<phrases.length;j++){
-      var w = phrases[j].length + 6;
-      var start = (acc / totalChars) * dur;
-      acc += w;
-      var end = (acc / totalChars) * dur;
-      state.timings.push({ start: start, end: end });
-    }
-  }
-
-  document.getElementById('textColor').addEventListener('input', function(e){ state.textColor = e.target.value; });
-  document.getElementById('bgColor').addEventListener('input', function(e){ state.bgColor = e.target.value; });
-
-  var animGrid = document.getElementById('animGrid');
-  animGrid.addEventListener('click', function(e){
-    var btn = e.target.closest('.anim-btn');
-    if(!btn){ return; }
-    var btns = animGrid.querySelectorAll('.anim-btn');
-    for(var i=0;i<btns.length;i++){ btns[i].classList.remove('active'); }
-    btn.classList.add('active');
-    state.animation = btn.getAttribute('data-anim');
   });
 
   var imgListEl = document.getElementById('imgList');
@@ -335,33 +368,33 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
     var files = e.target.files;
     if(!files || !files.length){ return; }
     
-    showToast(files.length + ' image(s) ajoutee(s)');
-    
-    for(var i=0;i<files.length;i++){
+    for(var i=0; i<files.length; i++){
       var f = files[i];
       var url = URL.createObjectURL(f);
       state.images.push({ url: url, name: f.name, startPhrase: 0 });
     }
     renderImages();
     e.target.value = '';
+    showToast(files.length + ' image(s) ajoutee(s) !');
   });
 
   function renderImages(){
     imgListEl.innerHTML = '';
     var meta = document.getElementById('imgMeta');
     if(state.images.length === 0){
-      meta.textContent = 'Aucune image. Le fond anime sera utilise.';
+      meta.textContent = 'L\'IA placera vos images automatiquement.';
       return;
     }
-    meta.textContent = state.images.length + ' image(s). Choisissez la phrase de depart de chacune.';
-    for(var i=0;i<state.images.length;i++){
+    meta.textContent = state.images.length + ' image(s) chargee(s). Vous pouvez forcer le depart si besoin.';
+    
+    for(var i=0; i<state.images.length; i++){
       (function(img, idx){
         var item = document.createElement('div');
         item.className = 'img-item';
 
         var row = document.createElement('div');
         row.className = 'img-row';
-
+        
         var thumb = document.createElement('img');
         thumb.src = img.url;
         row.appendChild(thumb);
@@ -374,20 +407,18 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
         var rm = document.createElement('button');
         rm.className = 'remove';
         rm.innerHTML = '&times;';
-        rm.setAttribute('aria-label', 'Supprimer');
         rm.addEventListener('click', function(){
           URL.revokeObjectURL(img.url);
           state.images.splice(idx, 1);
           renderImages();
         });
         row.appendChild(rm);
-
         item.appendChild(row);
 
         var sel = document.createElement('select');
-        var opts = '<option value="0">Des le debut</option>';
-        for(var p=1;p<=state.phrases.length;p++){
-          opts += '<option value="' + p + '">Phrase ' + p + '</option>';
+        var opts = '<option value="0">Laissez l\'IA decider</option>';
+        for(var p=1; p<=state.phrases.length; p++){
+          opts += '<option value="' + p + '">Afficher a la phrase ' + p + '</option>';
         }
         sel.innerHTML = opts;
         sel.value = String(img.startPhrase);
@@ -401,41 +432,91 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
     }
   }
 
-  function rebuildImageSelects(){
-    if(state.images.length > 0){ renderImages(); }
-  }
+  document.getElementById('textColor').addEventListener('input', function(e){ state.textColor = e.target.value; });
+  document.getElementById('bgColor').addEventListener('input', function(e){ state.bgColor = e.target.value; });
 
+  // ==========================================
+  // 5. LE BOUTON DE GENERATION (L'ACTION DE L'IA)
+  // ==========================================
+  
+  document.getElementById('brainBtn').addEventListener('click', function(){
+    var raw = document.getElementById('textInput').value;
+    if(!raw || raw.trim().length === 0){
+      showToast('Ecrivez d\'abord un texte.');
+      return;
+    }
+    if(state.duration <= 0){
+      showToast('Ajoutez un fichier audio d\'abord.');
+      return;
+    }
+
+    showToast('L\'IA analyse et synchronise...');
+
+    // 1. Découpage
+    state.phrases = cleanAndSplitText(raw);
+    
+    // 2. Calcul des poids de respiration
+    var weights = calculatePhraseWeights(state.phrases);
+    
+    // 3. Synchronisation temporelle
+    state.timings = syncTimings(state.phrases, weights, state.duration);
+    
+    // 4. Choix de l'animation
+    var anim = aiChooseAnimation(state.phrases);
+    state.animation = anim;
+    
+    // Mise à jour visuelle des boutons d'animation (même s'ils sont cachés, c'est pour la cohérence)
+    var btns = document.querySelectorAll('.anim-btn');
+    for(var b=0; b<btns.length; b++){
+      if(btns[b].getAttribute('data-anim') === anim){
+        btns[b].classList.add('active');
+      } else {
+        btns[b].classList.remove('active');
+      }
+    }
+
+    // 5. Placement des images
+    aiPlaceImages(state.images, state.phrases.length);
+    
+    // 6. Mise à jour de l'interface texte
+    document.getElementById('textInput').value = state.phrases.join('\n');
+    renderImages();
+
+    setTimeout(function(){
+      showToast('Synchronisation terminee ! ' + state.phrases.length + ' phrases.');
+    }, 500);
+  });
+
+  // ==========================================
+  // 6. MOTEUR DE LECTURE VIDEO/AUDIO
+  // ==========================================
+  
   function resetStage(){
     currentPhraseIdx = -1;
     currentImgUrl = null;
     activeBg = 'A';
     clearInterval(typewriterInterval);
-    clearTimeout(phraseTimeout);
     phraseText.textContent = '';
     phraseText.className = '';
     phraseText.style.color = state.textColor;
-    phraseText.style.textShadow = luminance(state.textColor) > 0.5 ? '0 2px 24px rgba(0,0,0,.4)' : '0 2px 24px rgba(255,255,255,.15)';
     bgGradient.style.background = 'radial-gradient(circle at 30% 20%, ' + shade(state.bgColor, 12) + ', ' + state.bgColor + ' 70%)';
     bgGradient.style.opacity = '1';
-    bgA.className = 'bg-layer';
-    bgB.className = 'bg-layer';
-    bgA.style.backgroundImage = '';
-    bgB.style.backgroundImage = '';
+    bgA.className = 'bg-layer'; bgB.className = 'bg-layer';
+    bgA.style.backgroundImage = ''; bgB.style.backgroundImage = '';
     progress.style.width = '0%';
     applyImageForPhrase(1);
   }
 
   function applyImageForPhrase(phraseIdx){
     var chosen = null;
-    for(var i=0;i<state.images.length;i++){
+    for(var i=0; i<state.images.length; i++){
       if(state.images[i].startPhrase <= phraseIdx){ chosen = state.images[i]; }
     }
     if(!chosen){
       if(currentImgUrl){
         currentImgUrl = null;
         bgGradient.style.opacity = '1';
-        bgA.classList.remove('show');
-        bgB.classList.remove('show');
+        bgA.classList.remove('show'); bgB.classList.remove('show');
       }
       return;
     }
@@ -454,7 +535,7 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
   function getCurrentPhraseIndex(t){
     var timings = state.timings;
     if(timings.length === 0){ return -1; }
-    for(var i=0;i<timings.length;i++){
+    for(var i=0; i<timings.length; i++){
       if(t >= timings[i].start && t < timings[i].end){ return i; }
     }
     if(t >= timings[timings.length-1].end){ return timings.length - 1; }
@@ -467,7 +548,6 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
     var t = state.timings[idx];
     var dur = Math.max(0.2, t.end - t.start);
     clearInterval(typewriterInterval);
-    clearTimeout(phraseTimeout);
     phraseText.style.color = state.textColor;
 
     if(state.animation === 'type'){
@@ -503,29 +583,19 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
     }
     if(!audioEl.paused && !audioEl.ended){
       rafId = requestAnimationFrame(tick);
-    } else if(audioEl.ended){
-      finishPlayback();
-    }
-  }
-
-  function finishPlayback(){
-    clearInterval(typewriterInterval);
-    if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
-    if(state.animation === 'type' && currentPhraseIdx >= 0 && state.phrases[currentPhraseIdx]){
-      phraseText.textContent = state.phrases[currentPhraseIdx];
     }
   }
 
   function beginPlayback(){
-    var p = audioEl.play();
-    if(p && p.catch){ p.catch(function(){ showToast('Lecture impossible. Touchez a nouveau.'); }); }
+    audioEl.play().catch(function(){ 
+      showToast('Touchez a nouveau pour lancer.'); 
+    });
     rafId = requestAnimationFrame(tick);
   }
 
   function startPlayback(recording){
-    if(!state.audioUrl){ showToast('Ajoutez d\'abord un fichier audio.'); return; }
-    if(state.phrases.length === 0){ showToast('Ecrivez au moins une phrase (une par ligne).'); return; }
-    if(state.duration <= 0){ showToast('Audio pas encore pret. Reessayez dans une seconde.'); return; }
+    if(!state.audioUrl){ showToast('Ajoutez un fichier audio.'); return; }
+    if(state.phrases.length === 0){ showToast('Generez le texte avec l\'IA d\'abord.'); return; }
 
     stage.classList.add('on');
     if(recording){ stage.classList.add('recording'); }
@@ -552,22 +622,14 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
   document.getElementById('closeStage').addEventListener('click', function(){
     audioEl.pause();
     audioEl.currentTime = 0;
-    finishPlayback();
+    clearInterval(typewriterInterval);
+    if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
     startOverlay.classList.remove('on');
     stage.classList.remove('on');
     stage.classList.remove('recording');
   });
 
-  window.MotionApp = {
-    state: state,
-    renderImages: renderImages,
-    showToast: showToast
-  };
-
 })();
 </script>
-
-<script src="brain.js"></script>
-
 </body>
 </html>
