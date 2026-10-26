@@ -110,8 +110,6 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
 .btn-brain{min-height:52px;border-radius:12px;font-size:15px;font-weight:600;letter-spacing:.04em;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,rgba(201,169,97,.2),rgba(201,169,97,.06));border:1px solid rgba(201,169,97,.45);color:var(--gold);-webkit-tap-highlight-color:transparent;transition:transform .12s,background .2s}
 .btn-brain:active{transform:scale(.98);background:linear-gradient(135deg,rgba(201,169,97,.32),rgba(201,169,97,.14))}
 .brain-icon{font-size:18px;line-height:1}
-
-
 </style>
 </head>
 <body>
@@ -168,9 +166,7 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
   </div>
 
   <div class="actions">
-
-<button class="btn-brain" id="brainBtn"><span class="brain-icon">&#10022;</span>Generer automatiquement</button>
-
+    <button class="btn-brain" id="brainBtn"><span class="brain-icon">&#10022;</span>Generer automatiquement</button>
     <button class="btn-primary" id="previewBtn">Apercu</button>
     <button class="btn-secondary" id="recordBtn">Mode Enregistrement</button>
   </div>
@@ -229,7 +225,7 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
     toastEl.textContent = msg;
     toastEl.classList.add('on');
     clearTimeout(toastEl._t);
-    toastEl._t = setTimeout(function(){ toastEl.classList.remove('on'); }, 2200);
+    toastEl._t = setTimeout(function(){ toastEl.classList.remove('on'); }, 2500);
   }
 
   function shade(hex, pct){
@@ -269,18 +265,32 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
   document.getElementById('audioInput').addEventListener('change', function(e){
     var f = e.target.files && e.target.files[0];
     if(!f){ return; }
+    
+    document.getElementById('audioMeta').textContent = f.name + ' (chargement...)';
+    document.getElementById('audioBtn').classList.add('has-file');
+    showToast('Fichier audio selectionne...');
+
     if(state.audioUrl){ URL.revokeObjectURL(state.audioUrl); }
     state.audioUrl = URL.createObjectURL(f);
+    
     audioEl.src = state.audioUrl;
-    document.getElementById('audioBtn').classList.add('has-file');
-    document.getElementById('audioMeta').textContent = f.name;
-    audioEl.addEventListener('loadedmetadata', function once(){
-      state.duration = audioEl.duration || 0;
-      if(!isFinite(state.duration)){ state.duration = 0; }
-      document.getElementById('audioMeta').textContent = f.name + ' - ' + formatTime(state.duration);
-      computeTimings();
-      audioEl.removeEventListener('loadedmetadata', once);
-    });
+    audioEl.load();
+
+    var attempts = 0;
+    var checkDuration = setInterval(function(){
+      attempts++;
+      if(audioEl.duration && isFinite(audioEl.duration) && audioEl.duration > 0){
+        clearInterval(checkDuration);
+        state.duration = audioEl.duration;
+        document.getElementById('audioMeta').textContent = f.name + ' - ' + formatTime(state.duration);
+        computeTimings();
+        showToast('Audio pret : ' + formatTime(state.duration));
+      } else if(attempts > 20){ 
+        clearInterval(checkDuration);
+        document.getElementById('audioMeta').textContent = f.name + ' (Format non lu par Safari)';
+        showToast('Impossible de lire la duree. Verifiez l\'extension du fichier.');
+      }
+    }, 300);
   });
 
   var textInput = document.getElementById('textInput');
@@ -324,6 +334,9 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
   document.getElementById('imgInput').addEventListener('change', function(e){
     var files = e.target.files;
     if(!files || !files.length){ return; }
+    
+    showToast(files.length + ' image(s) ajoutee(s)');
+    
     for(var i=0;i<files.length;i++){
       var f = files[i];
       var url = URL.createObjectURL(f);
@@ -511,12 +524,11 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
 
   function startPlayback(recording){
     if(!state.audioUrl){ showToast('Ajoutez d\'abord un fichier audio.'); return; }
-   back if(state.phrases.length(false === 0){ showToast('Ecrivez au moins une phrase (une par ligne).'); return; }
-    if(state.duration <=); 0){ showToast('Audio pas encore pret. Reessayez dans une seconde.'); return; }
+    if(state.phrases.length === 0){ showToast('Ecrivez au moins une phrase (une par ligne).'); return; }
+    if(state.duration <= 0){ showToast('Audio pas encore pret. Reessayez dans une seconde.'); return; }
 
     stage.classList.add('on');
-    if(recording });
-){ stage.classList.add('recording'); }
+    if(recording){ stage.classList.add('recording'); }
     else { stage.classList.remove('recording'); }
 
     resetStage();
@@ -525,12 +537,13 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
     if(recording){
       startOverlay.classList.add('on');
     } else {
-      startOverlay .classList.remove('on');
+      startOverlay.classList.remove('on');
       beginPlayback();
     }
   }
 
-  document.getElementById('previewBtn').addEventListener('click', function(){ startPlay document.getElementById('recordBtn').addEventListener('click', function(){ startPlayback(true); });
+  document.getElementById('previewBtn').addEventListener('click', function(){ startPlayback(false); });
+  document.getElementById('recordBtn').addEventListener('click', function(){ startPlayback(true); });
   document.getElementById('startPlayBtn').addEventListener('click', function(){
     startOverlay.classList.remove('on');
     beginPlayback();
@@ -545,11 +558,11 @@ input[type=color]{width:100%;height:48px;border:1px solid var(--border);border-r
     stage.classList.remove('recording');
   });
 
-window.MotionApp = {
-  state: state,
-  renderImages: renderImages,
-  showToast: showToast
-};
+  window.MotionApp = {
+    state: state,
+    renderImages: renderImages,
+    showToast: showToast
+  };
 
 })();
 </script>
